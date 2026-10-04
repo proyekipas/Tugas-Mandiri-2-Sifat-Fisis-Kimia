@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TM 2 – Misi Detektif Zat</title>
+<style>
+:root{--bg:#0e1230;--card:#181d4a;--ink:#f4f6ff;--mut:#aab2e8;--lime:#c6ff3d;--cy:#34e0ff;--pk:#ff4fa3;--red:#ff4d5e}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;max-width:100%;overflow-x:hidden;background:radial-gradient(circle at 85% -10%,#3b2a9a 0,transparent 45%),var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+#app{max-width:680px;margin:0 auto;padding:14px 14px 80px}
+h1{font-size:23px;margin:0;line-height:1.2}h1 span{color:var(--lime)}
+h2{font-size:19px;margin:0 0 6px;color:var(--cy)}h3{font-size:16px;margin:0 0 8px;color:var(--lime)}
+p{margin:6px 0}.mut{color:var(--mut);font-size:14px}
+.top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.bar{height:12px;background:#262c66;border-radius:9px;overflow:hidden;margin:10px 0 4px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cy),var(--lime));transition:width .3s}
+.card{background:var(--card);border:2px solid #2d3585;border-radius:16px;padding:14px;margin:12px 0;max-width:100%}
+.tip{border-color:var(--pk);background:#2a1650}
+.fld{margin:10px 0}label{display:block;font-weight:700;font-size:14px;margin-bottom:4px}
+input,textarea,select{width:100%;max-width:100%;font:16px/1.4 inherit;font-family:inherit;color:#10143a;background:#f4f6ff;border:3px solid transparent;border-radius:10px;padding:10px;resize:none;overflow:hidden}
+textarea{min-height:46px}
+input:focus,textarea:focus{outline:none;border-color:var(--cy)}
+.err input,.err textarea,.err canvas{border-color:var(--red)!important;background:#fff1f2}
+.msg{color:#ff8a95;font-size:14px;font-weight:600}
+.btn{min-height:46px;padding:10px 16px;border:0;border-radius:12px;font:700 16px inherit;font-family:inherit;color:#10143a;background:var(--lime);cursor:pointer}
+.btn.s{background:#dfe3ff}.btn.d{background:var(--red);color:#fff}.btn.c{background:var(--cy)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.row .btn{flex:1 1 130px}
+.nav{display:flex;gap:10px;margin-top:16px}.nav .btn{flex:1}
+.pg{display:none}.pg.on{display:block}
+canvas{width:100%;height:auto;display:block;background:#fff;border:3px solid #fff;border-radius:12px;touch-action:none}
+.sw{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.sw b{width:36px;height:36px;border-radius:50%;border:3px solid #fff;cursor:pointer}
+.sw b.on{outline:3px solid var(--lime)}
+.sw input[type=range]{width:110px;padding:0;border:0;background:none}
+.conf{background:#3a1030;border:2px solid var(--red);border-radius:12px;padding:10px;margin-top:8px}
+.conf .row .btn{min-height:46px}
+.score{font-size:46px;font-weight:900;color:var(--lime);line-height:1}
+.ok{color:var(--lime)}.no{color:#ff8a95}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid #4a54b0;padding:6px;text-align:left;vertical-align:top;word-break:break-word}th{background:#262c66}
+.it{border-left:4px solid var(--cy);padding:6px 10px;margin:8px 0;background:#10143a66;border-radius:6px}
+.opt{display:block;width:100%;text-align:left;min-height:46px;margin:7px 0;padding:10px 12px;border:3px solid transparent;border-radius:12px;background:#dfe3ff;color:#10143a;font:600 15px/1.35 inherit;font-family:inherit;cursor:pointer}
+.opt.on{border-color:var(--cy);background:#fff}
+.good{border-color:var(--lime)}.good .opt.on{background:#c6ff3d}
+.bad{border-color:var(--red)}.bad .opt.on{background:#ffb3bb}
+.qe{font-size:14px;font-weight:600;margin-top:6px}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);max-width:92%;background:#fff;color:#10143a;font-weight:700;padding:11px 16px;border-radius:12px;box-shadow:0 6px 20px #0008;opacity:0;pointer-events:none;transition:opacity .25s;z-index:9}
+#toast.on{opacity:1}
+#printDoc{display:none}
+@media print{
+ @page{margin:14mm}
+ body{background:#fff!important;color:#000!important;font-size:12pt}
+ #app,#toast{display:none!important}
+ #printDoc{display:block}
+ #printDoc h1{font-size:18pt;color:#000}#printDoc h1 span{color:#000}
+ #printDoc table{font-size:11pt}#printDoc th{background:#eee}#printDoc th,#printDoc td{border:1px solid #444}
+ #printDoc .t{white-space:pre-wrap;word-break:break-word;border:1px solid #888;padding:5px;margin:3px 0 8px}
+ #printDoc img{max-width:100%;border:1px solid #444;page-break-inside:avoid}
+ #printDoc h3{color:#000;margin:12px 0 4px}
+}
+</style></head><body>
+<div id="app">
+ <div class="top">
+  <div><h1>🕵️ Misi <span>Detektif Zat</span></h1><div class="mut">TM 2 • Proyek IPAS • Sifat Materi &amp; Pengukurannya</div></div>
+  <div id="rsBox" style="min-width:104px;text-align:right">
+   <button class="btn s" style="min-height:44px;padding:8px 12px" data-show="rsConf">Mulai Ulang</button>
+   <div class="conf" id="rsConf" hidden style="text-align:left;position:relative;z-index:5">
+    <b>Yakin hapus semua jawaban?</b>
+    <div class="row"><button class="btn d" data-do="reset">Ya, hapus</button><button class="btn s" data-hide="rsConf">Batal</button></div>
+   </div>
+  </div>
+ </div>
+ <div class="bar"><i id="pb"></i></div>
+ <div class="mut" id="pt"></div>
+ <div id="pages"></div>
+ <div class="nav"><button class="btn s" id="prev">← Kembali</button><button class="btn" id="next">Lanjut →</button></div>
+</div>
+<div id="toast"></div>
+<div id="printDoc"></div>
+
+<script>
+(function(){
+"use strict";
+var KEY='tm2_sifat_materi_pengukuran_v1',OFF=4,TOTAL=10,PASS=6,AUTO=['tabs','pastes','drawn','sketch','step','passed','qa','qs','qsc','tries'];
+var isResetting=false,timer=null,step=0,S=blank(),undo=[],color='#10143a',cv,cx,drawing=false;
+function blank(){return{tabs:0,pastes:0,drawn:false,sketch:'',step:0,passed:false,qa:{},qs:{},qsc:0,tries:0}}
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(m){var t=$('toast');t.textContent=m;t.className='on';clearTimeout(toast.t);toast.t=setTimeout(function(){t.className=''},2400)}
+
+/* ===== penyimpanan ===== */
+function isEmpty(){if(S.drawn||S.tabs||S.pastes||S.passed||S.tries)return false;for(var k in S){if(AUTO.indexOf(k)<0&&String(S[k]).trim())return false}return true}
+function saveNow(){if(isResetting)return;if(isEmpty())return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function saveDeb(){if(isResetting)return;clearTimeout(timer);timer=setTimeout(saveNow,300)}
+try{var raw=localStorage.getItem(KEY);if(raw)S=Object.assign(blank(),JSON.parse(raw))}catch(e){}
+
+/* ===== label & field ===== */
+var L={nama:'Nama',kelas:'Kelas',absen:'No. Absen',kb:'Benda pilihan untuk Kartu Profil',alias:'Nama Alias',kf1:'Sifat fisis 1',kf2:'Sifat fisis 2',kk1:'Sifat kimia 1',kk2:'Sifat kimia 2',ka:'Alat ukur yang cocok',cerita:'Alasan memilih benda & cerita ke teman','_sketsa':'Sketsa benda'};
+for(var i=1;i<=5;i++){L['b'+i]='Nama benda ke-'+i;L['r'+i+'f']='Benda '+i+' – Sifat fisis';L['r'+i+'k']='Benda '+i+' – Sifat kimia';L['r'+i+'a']='Benda '+i+' – Alat ukur'}
+function F(k,ph,o){o=o||{};var tag=o.one?'input':'textarea';
+ return '<div class="fld" id="w_'+k+'"><label for="f_'+k+'">'+L[k]+'</label><'+tag+' id="f_'+k+'" data-k="'+k+'" class="'+(o.id?'idf':'ans')+'" placeholder="'+ph+'" '+(o.num?'inputmode="numeric"':'')+' autocomplete="off" '+(tag=='input'?'type="text"':'rows="2"')+'>'+(tag=='input'?'':'</textarea>')+'<div class="msg"></div></div>'}
+var REQ=[['nama','kelas','absen'],['b1','b2','b3','b4','b5']];
+var tb='';for(i=1;i<=5;i++){REQ[2]=(REQ[2]||[]).concat(['r'+i+'f','r'+i+'k','r'+i+'a']);
+ tb+='<div class="card"><h3>🔎 Barang bukti #'+i+': <span data-bn="'+i+'">Benda '+i+'</span></h3>'+F('r'+i+'f','Warna, bau, wujud, kekerasan…')+F('r'+i+'k','Mudah berkarat / mudah basi / mudah terbakar…')+F('r'+i+'a','Penggaris, timbangan, termometer…')+'</div>'}
+REQ[3]=['kb','alias','kf1','kf2','kk1','kk2','ka','_sketsa'];REQ[4]=['cerita'];REQ[5]=[];
+var COL=['#10143a','#e5243b','#ff8a00','#f5c400','#1fa84f','#1f6fe5','#9b3fd1','#8a5a2b'];
+
+
+function IT(a){return a.map(function(x){return '<div class="it"><b>'+x[0]+'</b> — '+x[1]+'<br><span class="mut">Contoh: '+x[2]+'</span></div>'}).join('')}
+var FIS=[['Warna','warna yang terlihat oleh mata','garam Galesong putih, gula aren coklat'],['Bau','aroma yang tercium hidung','bau amis ikan segar di TPI Paotere'],['Wujud','bentuk zat: padat, cair, atau gas','es balok (padat), air kelapa (cair), uap kuah coto panas (gas)'],['Kekerasan','seberapa keras/lunak benda','batu karang Pantai Akkarena keras, adonan pisang epe lunak'],['Titik leleh &amp; titik didih','suhu saat zat berubah wujud','coklat batangan meleleh di terik Makassar (±31–32°C)'],['Kelarutan','kemampuan zat larut dalam zat lain','gula larut di es pisang ijo, minyak tidak larut di kuah coto'],['Daya hantar listrik','kemampuan menghantarkan arus listrik','kabel tembaga tiang PLN menghantarkan, kabel plastik tidak'],['Massa jenis','perbandingan massa dengan volume','minyak kelapa mengapung di air karena massa jenisnya lebih kecil']];
+var KIM=[['Mudah terbakar','mudah menyala jika kena api','bensin motor/pete-pete harus jauh dari api'],['Mudah berkarat','bereaksi dengan udara/air membentuk karat (zat baru)','rantai kapal nelayan Paotere yang terus kena air laut'],['Mudah busuk / basi','berubah jadi zat baru karena pembusukan','ikan segar tanpa es cepat busuk dan berbau menyengat'],['Bereaksi dengan asam','berubah sifat saat bertemu zat asam','air jeruk nipis pada ikan mengubah bau amis'],['Dapat difermentasi','berubah jadi zat baru lewat fermentasi','singkong menjadi tape: manis dan sedikit beralkohol'],['Beracun / tidak beracun','dapat membahayakan makhluk hidup','minyak goreng berulang kali yang menghitam berbahaya jika terus dikonsumsi']];
+var CMP=[['Cara muncul','Sifat fisis: bisa diamati/diukur TANPA zat jadi zat baru. Sifat kimia: baru terlihat SETELAH zat berubah jadi zat baru.'],['Contoh','Fisis: warna, bau, wujud, titik leleh, massa jenis. Kimia: mudah terbakar, berkarat, busuk.'],['Bisa kembali?','Fisis: biasanya bisa (es mencair bisa dibekukan lagi). Kimia: biasanya TIDAK (kayu jadi abu tak bisa jadi kayu).']];
+var ALT=[['Panjang','Penggaris / meteran','mengukur panjang, lebar, tinggi','pedagang kain di Pasar Terong memakai meteran'],['Massa (berat)','Timbangan','mengukur berat benda','nelayan TPI Paotere menimbang ikan'],['Volume','Gelas ukur','mengukur isi cairan','mengukur santan untuk kuah coto/pallubasa'],['Suhu','Termometer','mengukur panas/dinginnya benda','mengecek suhu badan atau air rebusan'],['Waktu','Stopwatch / jam','mengukur lamanya proses','menghitung waktu menetes minyak (kekentalan)'],['Keasaman (pH)','Kertas lakmus / indikator pH','mengukur asam/basa zat cair','mengecek keasaman air tambak bandeng di Maros']];
+var MAT=[
+'<div class="card tip"><b>Urutan belajar:</b> ① baca 3 halaman materi → ② Cek Pemahaman (wajib lulus) → ③ Tugas Mandiri “Misi Detektif Zat”.</div><div class="card"><h2>📖 Materi 1 dari 3: Pendahuluan</h2><p>Pernah jalan sore di Pantai Losari lalu iseng menjilat tangan yang kena percikan air laut? Asin sekali! Tapi air keran PDAM di rumah rasanya tawar.</p><p><b>Kenapa air laut dan air keran berbeda, padahal sama-sama “air”?</b> Jawabannya ada pada <b>sifat materi</b> dan cara <b>mengukurnya</b>.</p><p>Setiap benda — air, garam, minyak kelapa, besi pagar — punya ciri khas. Ciri khas itu disebut <b>sifat materi</b>, terdiri dari <b>sifat fisis</b> dan <b>sifat kimia</b>. Kita juga belajar alat ukur sederhana supaya tidak asal menebak, tapi bisa membuktikan secara ilmiah.</p></div><div class="card tip">💡 <b>Tahukah Kamu?</b> Air laut di perairan Makassar mengandung garam sekitar 3–3,5%. Nelayan Paotere dan petani garam Galesong “memanen” garam dengan menjemur air laut sampai airnya menguap. Ini contoh sifat fisis: kelarutan dan titik didih.</div><div class="card"><h3>🎯 Tujuan Belajar</h3><p>Kamu mampu menjelaskan pengukuran sifat kimia dan fisis suatu zat.</p></div>',
+'<div class="card"><h2>📖 Materi 2 dari 3: Sifat Fisis &amp; Kimia</h2><h3>Sifat Fisis</h3><p><b>Sifat fisis</b> adalah ciri zat yang bisa langsung diamati atau diukur <b>tanpa</b> membuat zat berubah menjadi zat baru. Contoh: es batu mencair jadi air tetap H2O, hanya wujudnya berubah dari padat ke cair.</p>'+IT(FIS)+'</div><div class="card"><h3>Sifat Kimia</h3><p><b>Sifat kimia</b> adalah ciri zat yang baru terlihat ketika zat <b>bereaksi dan berubah menjadi zat baru</b>. Contoh: kertas dibakar jadi abu. Abu bukan kertas lagi dan tidak bisa dikembalikan.</p>'+IT(KIM)+'</div><div class="card"><h3>Perbandingan</h3>'+CMP.map(function(x){return '<div class="it"><b>'+x[0]+'</b><br>'+x[1]+'</div>'}).join('')+'</div>',
+'<div class="card"><h2>📖 Materi 3 dari 3: Alat Ukur Sederhana</h2><p>Agar tidak menebak-nebak, sifat zat sebaiknya <b>diukur</b> dengan alat yang tepat.</p>'+ALT.map(function(x){return '<div class="it"><b>'+x[0]+' → '+x[1]+'</b><br>Fungsi: '+x[2]+'<br><span class="mut">Contoh: '+x[3]+'</span></div>'}).join('')+'</div><div class="card tip"><h3>Tips Membaca Alat Ukur</h3><p>① Mata <b>sejajar</b> dengan skala. ② Alat bersih dan menunjuk <b>angka nol</b> sebelum mengukur. ③ Catat hasil <b>beserta satuannya</b> (25 cm, bukan 25). ④ Ulangi 2–3 kali agar akurat.</p></div><div class="card"><h3>✅ Rangkuman</h3><p><b>Sifat fisis</b> = ciri zat yang bisa diamati/diukur tanpa membentuk zat baru. <b>Sifat kimia</b> = ciri zat yang muncul saat zat berubah jadi zat baru. Alat ukur yang tepat membuat kesimpulan akurat dan bisa dipertanggungjawabkan.</p><p class="mut">Sudah merasa paham? Klik “Lanjut” untuk Cek Pemahaman.</p></div>'];
+var QZ=[
+{q:'Es batu mencair menjadi air. Ini menunjukkan…',o:['sifat kimia, karena zatnya berubah','sifat fisis, karena zatnya tetap air dan hanya wujudnya yang berubah','sifat kimia, karena suhunya berubah','bukan sifat materi'],a:1,e:'zatnya tetap H2O, hanya wujud padat → cair, jadi termasuk sifat fisis.'},
+{q:'Kertas dibakar menjadi abu yang tidak bisa menjadi kertas lagi. Ini adalah…',o:['sifat fisis karena warnanya berubah','sifat fisis karena ukurannya mengecil','sifat kimia karena terbentuk zat baru dan tidak bisa kembali','tidak ada perubahan'],a:2,e:'abu adalah zat baru dan tidak bisa dikembalikan, ciri sifat kimia.'},
+{q:'Manakah yang termasuk SIFAT KIMIA?',o:['Gula larut dalam teh','Minyak mengapung di atas air','Besi pagar berkarat jika terkena air','Kabel tembaga menghantarkan listrik'],a:2,e:'berkarat menghasilkan zat baru (karat). Lainnya adalah sifat fisis.'},
+{q:'Singkong menjadi tape yang manis dan sedikit beralkohol. Penyebabnya…',o:['singkong hanya berubah bentuk','singkong berubah menjadi zat baru lewat fermentasi (sifat kimia)','singkong hanya berubah warna','singkong larut dalam air'],a:1,e:'fermentasi membentuk zat baru, jadi ini sifat kimia.'},
+{q:'Pedagang kain di Pasar Terong ingin mengukur panjang kain. Alat yang paling tepat?',o:['Timbangan','Meteran','Termometer','Stopwatch'],a:1,e:'panjang diukur dengan penggaris atau meteran.'},
+{q:'Cara paling tepat mengecek tingkat keasaman air tambak ikan bandeng?',o:['Gelas ukur','Termometer','Kertas lakmus / indikator pH','Penggaris'],a:2,e:'keasaman (pH) diukur dengan kertas lakmus atau indikator pH.'},
+{q:'Cara membaca alat ukur yang BENAR adalah…',o:['mata dari atas supaya jelas','mata sejajar skala, alat di angka nol, hasil dicatat dengan satuan','langsung baca tanpa mengecek nol','cukup menulis angka tanpa satuan'],a:1,e:'mata sejajar skala, mulai dari nol, dan selalu tulis satuan (contoh 25 cm).'},
+{q:'Perbedaan utama sifat fisis dan sifat kimia adalah…',o:['fisis tidak membentuk zat baru, kimia terlihat saat zat berubah menjadi zat baru','fisis hanya warna, kimia hanya bau','keduanya sama saja','fisis selalu tidak bisa kembali ke bentuk semula'],a:0,e:'kuncinya: ada tidaknya zat baru yang terbentuk.'}];
+function qres(){if(S.passed)return '<b class="ok">🎉 Lulus! Skor '+S.qsc+' dari '+QZ.length+'. Klik “Lanjut” untuk mulai Tugas Mandiri.</b>';
+ if(S.tries)return '<b class="no">Skor '+S.qsc+' dari '+QZ.length+' (minimal '+PASS+'). Baca petunjuk pada soal merah, pelajari materi lagi bila perlu, lalu jawab ulang soal merah. Percobaan ke-'+S.tries+'.</b>';return ''}
+function renderQuiz(){
+ var h='<div class="card"><h2>🧠 Cek Pemahaman</h2><p class="mut">Jawab '+QZ.length+' soal. Benar minimal '+PASS+' soal untuk membuka Tugas Mandiri. Belum paham? Tekan “Kembali” dan baca materi lagi.</p></div>';
+ QZ.forEach(function(q,n){var st=S.qs[n],cls=st===1?'good':st===0?'bad':'';
+  h+='<div class="card q '+cls+'" id="q'+n+'"><b>'+(n+1)+'. '+q.q+'</b>'+q.o.map(function(o,i){return '<button type="button" class="opt'+(S.qa[n]===i?' on':'')+'" data-q="'+n+'" data-i="'+i+'">'+o+'</button>'}).join('')+(st===1?'<div class="qe ok">✔ Benar: '+q.e+'</div>':st===0?'<div class="qe no">✘ Belum tepat. Petunjuk: '+q.e+'</div>':'')+'</div>'});
+ h+='<div class="card"><button type="button" class="btn" id="qchk" style="width:100%">'+(S.passed?'✔ Sudah Lulus':'Periksa Jawaban')+'</button><div id="qres" style="margin-top:8px">'+qres()+'</div></div>';
+ $('qz').innerHTML=h}
+function checkQuiz(){if(S.passed)return;
+ for(var n=0;n<QZ.length;n++)if(S.qa[n]===undefined){toast('Soal nomor '+(n+1)+' belum dijawab.');$('q'+n).scrollIntoView({behavior:'smooth',block:'center'});return}
+ var sc=0;QZ.forEach(function(q,k){if(S.qa[k]===q.a){S.qs[k]=1;sc++}else{S.qs[k]=0;delete S.qa[k]}});
+ S.tries++;S.qsc=sc;if(sc>=PASS)S.passed=true;saveNow();renderQuiz();
+ toast(S.passed?'Lulus! Skor '+sc+' dari '+QZ.length:'Skor '+sc+'. Perbaiki soal yang merah ya.');$('qres').scrollIntoView({behavior:'smooth',block:'center'})}
+document.addEventListener('click',function(e){var o=e.target.closest&&e.target.closest('.opt');
+ if(o){if(S.passed)return;var c=o.parentNode;if(c.classList.contains('good'))return;var n=+o.dataset.q;S.qa[n]=+o.dataset.i;delete S.qs[n];
+  c.className='card q';var x=c.querySelector('.qe');if(x)x.remove();var b=c.querySelectorAll('.opt');for(var j=0;j<b.length;j++)b[j].classList[b[j]===o?'add':'remove']('on');saveDeb();return}
+ if(e.target.id==='qchk')checkQuiz()});
+var PG=[MAT[0],MAT[1],MAT[2],'<div id="qz"></div>',
+'<div class="card"><h2>Identitas Detektif</h2><p class="mut">Isi dulu datamu. Nama file hasil tugas akan dibuat otomatis dari data ini.</p>'+F('nama','Nama lengkap',{one:1,id:1})+F('kelas','Contoh: X AK 1',{one:1,id:1})+F('absen','Contoh: 12',{one:1,id:1,num:1})+'</div>'
++'<div class="card tip"><b>Aturan main:</b> jawaban diketik sendiri. Menempel (paste) dimatikan, dan perpindahan ke aplikasi lain dicatat di laporan. Tidak ada jawaban yang salah selama kamu bisa menjelaskan alasannya!</div>',
+'<div class="card"><h2>Langkah 1 – Kumpulkan Barang Bukti</h2><p class="mut">Pilih 5 benda di sekitarmu sekarang (tas, kotak pensil, bekal, benda di kelas).</p>'+[1,2,3,4,5].map(function(n){return F('b'+n,'Contoh: Botol minum',{one:1})}).join('')+'</div>',
+'<div class="card"><h2>Langkah 2 – Investigasi Sifat</h2><p class="mut">Fisis = diamati langsung tanpa jadi zat baru. Kimia = muncul saat zat berubah jadi zat baru (boleh dari pengalaman/pengetahuan).</p><div class="card tip"><b>Contoh:</b> Es Pisang Ijo → fisis: warna hijau, dingin, wujud cair-lunak • kimia: mudah mencair jika lama di suhu panas • alat: termometer</div></div>'+tb,
+'<div class="card"><h2>Langkah 3 – Kartu Profil Zat</h2><p class="mut">Gambar sketsa bendamu di bawah, lalu lengkapi datanya. Kartunya harus seperti kartu superhero!</p>'
++'<div class="fld" id="w__sketsa"><label>Sketsa benda (gambar dengan jari)</label><canvas id="cv" width="640" height="400"></canvas><div class="msg"></div>'
++'<div class="sw" id="sw">'+COL.map(function(c,n){return '<b data-c="'+c+'" style="background:'+c+'" class="'+(n?'':'on')+'"></b>'}).join('')+'<b data-c="#ffffff" style="background:#fff" title="Penghapus"></b><input type="range" id="sz" min="2" max="24" value="5" aria-label="Tebal garis"></div>'
++'<div class="row" id="skBox"><button class="btn c" id="undo">↩ Undo</button><button class="btn s" data-show="skConf">Hapus Sketsa</button></div>'
++'<div class="conf" id="skConf" hidden><b>Hapus seluruh sketsa?</b><div class="row"><button class="btn d" data-do="clr">Ya, hapus</button><button class="btn s" data-hide="skConf">Batal</button></div></div></div>'
++F('kb','Benda yang kamu pilih',{one:1})+F('alias','Contoh: “Si Licin Berminyak”',{one:1})+F('kf1','Sifat fisis pertama')+F('kf2','Sifat fisis kedua')+F('kk1','Sifat kimia pertama')+F('kk2','Sifat kimia kedua')+F('ka','Alat ukur paling cocok')+'</div>',
+'<div class="card"><h2>Langkah 4 – Ceritakan ke Teman</h2><p class="mut">Tunjukkan Kartu Profilmu ke teman sebangku, lalu tulis ringkasan ceritamu: kenapa kamu memilih benda itu?</p>'+F('cerita','Aku memilih … karena …')+'</div>',
+'<div id="rv"></div>'];
+$('pages').innerHTML=PG.map(function(h,n){return '<section class="pg" id="pg'+n+'">'+h+'</section>'}).join('');
+cv=$('cv');cx=cv.getContext('2d');
+
+/* ===== auto-grow, nilai awal ===== */
+function grow(t){t.style.height='auto';t.style.height=(t.scrollHeight+4)+'px'}
+function fill(){var els=document.querySelectorAll('[data-k]');for(var n=0;n<els.length;n++)els[n].value=S[els[n].dataset.k]||''}
+function growAll(){var t=document.querySelectorAll('.pg.on textarea');for(var n=0;n<t.length;n++)grow(t[n])}
+function wipeCv(){cx.fillStyle='#fff';cx.fillRect(0,0,cv.width,cv.height)}
+wipeCv();
+if(S.sketch){var im=new Image();im.onload=function(){cx.drawImage(im,0,0,cv.width,cv.height)};im.src=S.sketch}
+fill();renderQuiz();
+
+/* ===== validasi ===== */
+function setErr(k,m){var w=$('w_'+k);if(!w)return;w.classList[m?'add':'remove']('err');w.querySelector('.msg').textContent=m||''}
+function validate(si){var bad=[];(REQ[si-OFF]||[]).forEach(function(k){var v=k==='_sketsa'?S.drawn:String(S[k]||'').trim(),m='';
+ if(!v)m=k==='_sketsa'?'Sketsa belum digambar. Gambar bendamu dulu ya.':'“'+L[k]+'” belum diisi.';
+ else if(k==='absen'&&!/^\d{1,3}$/.test(v))m='No. Absen harus berupa angka.';
+ setErr(k,m);if(m)bad.push(k)});return bad}
+function firstErr(){var e=document.querySelector('.pg.on .err');if(e)e.scrollIntoView({behavior:'smooth',block:'center'})}
+
+/* ===== navigasi ===== */
+function closeConf(){['rsConf','skConf'].forEach(function(id){var c=$(id);if(c)c.hidden=true});var b=document.querySelectorAll('[data-show]');for(var n=0;n<b.length;n++)b[n].hidden=false}
+function show(n){closeConf();step=n;S.step=n;
+ var p=document.querySelectorAll('.pg');for(var i2=0;i2<p.length;i2++)p[i2].classList[i2===n?'add':'remove']('on');
+ $('pb').style.width=((n+1)/TOTAL*100)+'%';$('pt').textContent='Halaman '+(n+1)+' dari '+TOTAL+' • '+(n<OFF-1?'Materi':n===OFF-1?'Cek Pemahaman':'Tugas Mandiri');
+ $('prev').style.visibility=n?'visible':'hidden';$('next').style.display=n===TOTAL-1?'none':'';
+ var bn=document.querySelectorAll('[data-bn]');for(var j=0;j<bn.length;j++)bn[j].textContent=S['b'+bn[j].dataset.bn]||('Benda '+bn[j].dataset.bn);
+ if(n===OFF+5)review();growAll();saveDeb();window.scrollTo(0,0)}
+$('prev').onclick=function(){if(step>0)show(step-1)};
+$('next').onclick=function(){if(step===OFF-1&&!S.passed){toast('Lulus Cek Pemahaman dulu (benar minimal '+PASS+' dari '+QZ.length+').');return}
+ var b=validate(step);
+ if(b.length){toast(b.length+' kolom belum lengkap. Cek yang berwarna merah.');firstErr();return}
+ if(step+1===OFF+5){for(var s=OFF;s<OFF+5;s++){if(validate(s).length){show(s);toast('Masih ada kolom kosong di halaman '+(s+1)+'.');setTimeout(firstErr,50);return}}}
+ show(step+1)};
+
+/* ===== input, anti-paste ===== */
+document.addEventListener('input',function(e){var t=e.target,k=t.dataset&&t.dataset.k;if(!k)return;
+ S[k]=t.value;if(t.tagName==='TEXTAREA')grow(t);var w=$('w_'+k);if(w&&t.value.trim())setErr(k,'');
+ if(k.charAt(0)==='b'&&k.length===2){var bn=document.querySelector('[data-bn="'+k.charAt(1)+'"]');if(bn)bn.textContent=t.value||('Benda '+k.charAt(1))}
+ saveDeb()});
+function guard(e){var t=e.target;if(t.classList&&t.classList.contains('ans')){e.preventDefault();if(e.type!=='contextmenu'&&e.type!=='dragover'){S.pastes++;saveDeb();toast('Menempel teks dimatikan. Ketik jawabanmu sendiri ya! ✍️')}}}
+['paste','drop','dragover','contextmenu'].forEach(function(ev){document.addEventListener(ev,guard,true)});
+window.addEventListener('resize',function(){growAll()});
+
+/* ===== pindah tab & simpan saat keluar ===== */
+document.addEventListener('visibilitychange',function(){if(isResetting)return;if(document.hidden){S.tabs++;saveNow()}});
+window.addEventListener('pagehide',function(){if(!isResetting)saveNow()});
+window.addEventListener('beforeunload',function(){if(!isResetting)saveNow()});
+window.addEventListener('blur',function(){if(!isResetting)saveNow()});
+
+/* ===== kanvas ===== */
+function pos(e){var r=cv.getBoundingClientRect();return[(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height]}
+cv.addEventListener('pointerdown',function(e){e.preventDefault();drawing=true;try{cv.setPointerCapture(e.pointerId)}catch(x){}
+ undo.push(cv.toDataURL('image/png'));if(undo.length>20)undo.shift();
+ var p=pos(e);cx.strokeStyle=color;cx.fillStyle=color;cx.lineWidth=+$('sz').value;cx.lineCap='round';cx.lineJoin='round';
+ cx.beginPath();cx.arc(p[0],p[1],cx.lineWidth/2,0,6.283);cx.fill();cx.beginPath();cx.moveTo(p[0],p[1])});
+cv.addEventListener('pointermove',function(e){if(!drawing)return;e.preventDefault();var p=pos(e);cx.lineTo(p[0],p[1]);cx.stroke()});
+function endDraw(){if(!drawing)return;drawing=false;S.drawn=true;S.sketch=cv.toDataURL('image/png');setErr('_sketsa','');saveDeb()}
+['pointerup','pointercancel','pointerleave'].forEach(function(ev){cv.addEventListener(ev,endDraw)});
+$('sw').addEventListener('click',function(e){var c=e.target.dataset&&e.target.dataset.c;if(!c)return;color=c;var b=$('sw').querySelectorAll('b');for(var n=0;n<b.length;n++)b[n].classList.remove('on');e.target.classList.add('on')});
+$('undo').onclick=function(){if(!undo.length){toast('Belum ada yang bisa di-undo.');return}
+ var im2=new Image();im2.onload=function(){cx.drawImage(im2,0,0,cv.width,cv.height);S.drawn=undo.length>0;S.sketch=S.drawn?cv.toDataURL('image/png'):'';saveDeb()};im2.src=undo.pop()};
+function clearSketch(){wipeCv();undo=[];S.drawn=false;S.sketch='';closeConf();saveDeb();toast('Sketsa dihapus.')}
+
+/* ===== reset (tanpa dialog bawaan) ===== */
+function doReset(){
+ isResetting=true;clearTimeout(timer);timer=null;
+ try{localStorage.removeItem(KEY)}catch(e){}
+ S=blank();undo=[];drawing=false;wipeCv();fill();renderQuiz();
+ var w=document.querySelectorAll('.err');for(var n=0;n<w.length;n++){w[n].classList.remove('err');w[n].querySelector('.msg').textContent=''}
+ var t=document.querySelectorAll('textarea');for(n=0;n<t.length;n++)t[n].style.height='auto';
+ show(0);
+ setTimeout(function(){isResetting=false},600);
+ toast('Semua jawaban sudah dihapus.')}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-show],[data-hide],[data-do]');if(!b)return;
+ if(b.dataset.show){b.hidden=true;$(b.dataset.show).hidden=false}
+ else if(b.dataset.hide){$(b.dataset.hide).hidden=true;var s=document.querySelector('[data-show="'+b.dataset.hide+'"]');if(s)s.hidden=false}
+ else if(b.dataset.do==='reset')doReset();
+ else if(b.dataset.do==='clr')clearSketch()});
+
+/* ===== penilaian kelengkapan ===== */
+var ALAT=/penggaris|meteran|timbangan|neraca|gelas ukur|termometer|stopwatch|jam|lakmus|ph|jangka|mistar/i;
+function filled(k){return !!String(S[k]||'').trim()}
+function stats(){var items=[],rows=0;
+ [].concat(REQ[0],REQ[1]).forEach(function(k){items.push(filled(k))});
+ for(var n=1;n<=5;n++){var a=filled('r'+n+'f'),b=filled('r'+n+'k'),c=filled('r'+n+'a');items.push(a,b,c);if(a&&b&&c)rows++}
+ var kc=0;['kb','alias','kf1','kf2','kk1','kk2','ka'].forEach(function(k){var f=filled(k);items.push(f);if(f)kc++});
+ items.push(!!S.drawn,filled('cerita'));
+ var ok=items.filter(Boolean).length;return{score:Math.round(ok/items.length*100),ok:ok,n:items.length,rows:rows,kc:kc}}
+function lvl(x,full,mid){return x>=full?'Baik Sekali':x>=mid?'Baik':'Perlu Bimbingan'}
+function review(){var s=stats(),r='';
+ r+='<div class="card"><h2>📋 Laporan Pengerjaan</h2><div class="score">'+s.score+'%</div><p>Skor kelengkapan: <b>'+s.ok+' dari '+s.n+'</b> bagian terisi.</p>'
+ +'<p>Berpindah tab/aplikasi: <b class="'+(S.tabs?'no':'ok')+'">'+S.tabs+' kali</b> • Percobaan menempel teks: <b class="'+(S.pastes?'no':'ok')+'">'+S.pastes+' kali</b></p>'
+ +'<p>Cek Pemahaman: skor <b>'+S.qsc+' dari '+QZ.length+'</b> • Percobaan: <b>'+S.tries+' kali</b></p>'
+ +'<p class="mut">Ini skor <b>kelengkapan</b>, bukan nilai kebenaran isi. Penilaian isi (ketepatan sifat &amp; kreativitas) tetap dilakukan manual oleh guru.</p></div>';
+ r+='<div class="card"><h3>Indikator Sesuai Kriteria Penilaian</h3><table><tr><th>Aspek</th><th>Hasil</th></tr>'
+ +'<tr><td>Kelengkapan Tabel</td><td>'+s.rows+' dari 5 benda lengkap → '+lvl(s.rows,5,3)+'</td></tr>'
+ +'<tr><td>Kelengkapan Kartu Profil</td><td>'+s.kc+' dari 7 isian → '+lvl(s.kc,7,5)+'</td></tr>'
+ +'<tr><td>Kreativitas Kartu</td><td>'+(S.drawn?'Sketsa ada':'Sketsa belum ada')+(filled('alias')?', alias ada':'')+' (kualitas dinilai guru)</td></tr></table></div>';
+ r+='<div class="card"><h3>Cek Alat Ukur</h3>';for(var n=1;n<=5;n++){var a=S['r'+n+'a']||'';r+='<p>'+esc(S['b'+n]||'Benda '+n)+': '+(ALAT.test(a)?'<span class="ok">✔ alat ukur dikenali</span>':'<span class="no">⚠ cek lagi, apakah ini alat ukur yang tepat?</span>')+'</p>'}r+='</div>';
+ r+='<div class="card tip"><h3>💡 Pembahasan Singkat</h3><p><b>Sifat fisis</b>: bisa diamati/diukur tanpa membentuk zat baru (warna, bau, wujud, kekerasan, titik leleh/didih, kelarutan, daya hantar listrik, massa jenis). Perubahannya biasanya bisa kembali (es mencair bisa dibekukan lagi).</p><p><b>Sifat kimia</b>: baru terlihat saat zat berubah jadi zat baru (mudah terbakar, berkarat, busuk/basi, bereaksi dengan asam, difermentasi). Biasanya tidak bisa kembali (kayu jadi abu).</p>'
+ +'<table><tr><th>Besaran</th><th>Alat</th></tr><tr><td>Panjang</td><td>Penggaris / meteran</td></tr><tr><td>Massa</td><td>Timbangan</td></tr><tr><td>Volume</td><td>Gelas ukur</td></tr><tr><td>Suhu</td><td>Termometer</td></tr><tr><td>Waktu</td><td>Stopwatch</td></tr><tr><td>Keasaman</td><td>Kertas lakmus / indikator pH</td></tr></table>'
+ +'<p class="mut">Tips: mata sejajar dengan skala, alat di angka nol, tulis satuan (25 cm, bukan 25), ulangi 2–3 kali.</p></div>';
+ r+='<div class="card"><h3>Simpan Hasil Tugas</h3><p class="mut">Nama file: <b>'+esc(fname())+'</b></p><div class="row"><button class="btn" id="bPdf">📄 Simpan sebagai PDF</button><button class="btn c" id="bTxt">⬇ Unduh .txt</button><button class="btn s" id="bCopy">📋 Salin teks</button></div>'
+ +'<p class="mut">Di PDF: pilih “Simpan sebagai PDF” pada jendela cetak. Di iPhone: cubit/zoom pratinjau cetak lalu bagikan/simpan ke Files. Jika tombol PDF tidak bekerja (misalnya di browser dalam aplikasi WhatsApp/Classroom), buka tautan di Chrome/Safari, atau pakai .txt. File .txt tidak memuat gambar.</p></div>';
+ $('rv').innerHTML=r;$('bPdf').onclick=savePdf;$('bTxt').onclick=saveTxt;$('bCopy').onclick=copyTxt}
+
+/* ===== ekspor ===== */
+function clean(s){return String(s||'').trim().replace(/[\\\/:*?"<>|]/g,'').replace(/\s+/g,'_')||'X'}
+function fname(){return 'TM 2_'+clean(S.nama)+'_'+clean(S.kelas)+'_'+clean(S.absen)}
+function plain(){var t=[],g=function(k){return String(S[k]||'').trim()||'-'};
+ t.push('TM 2 - MISI DETEKTIF ZAT (Proyek IPAS: Sifat Materi dan Pengukurannya)','Nama: '+g('nama'),'Kelas: '+g('kelas'),'No. Absen: '+g('absen'),'',
+ 'CATATAN: File .txt ini hanya berisi jawaban teks. Sketsa/gambar Kartu Profil hanya tersedia di versi PDF.','','== BARANG BUKTI ==');
+ for(var n=1;n<=5;n++)t.push(n+'. '+g('b'+n));
+ t.push('','== TABEL INVESTIGASI ==');
+ for(n=1;n<=5;n++)t.push('Benda '+n+': '+g('b'+n),'  Sifat fisis : '+g('r'+n+'f'),'  Sifat kimia : '+g('r'+n+'k'),'  Alat ukur   : '+g('r'+n+'a'));
+ t.push('','== KARTU PROFIL ZAT ==','Benda: '+g('kb'),'Nama alias: '+g('alias'),'Sifat fisis 1: '+g('kf1'),'Sifat fisis 2: '+g('kf2'),'Sifat kimia 1: '+g('kk1'),'Sifat kimia 2: '+g('kk2'),'Alat ukur: '+g('ka'),
+ '','== CERITA KE TEMAN ==',g('cerita'),'','== LAPORAN ==','Skor kelengkapan: '+stats().score+'%','Berpindah tab/aplikasi: '+S.tabs+' kali','Percobaan menempel teks: '+S.pastes+' kali','Cek Pemahaman: skor '+S.qsc+' dari '+QZ.length+', percobaan '+S.tries+' kali');
+ return t.join('\r\n')}
+function buildPrint(){var g=function(k){return esc(String(S[k]||'').trim()||'-')},h='<h1>TM 2 – Misi <span>Detektif Zat</span></h1><p>Proyek IPAS • Sifat Materi dan Pengukurannya</p>'
+ +'<p><b>Nama:</b> '+g('nama')+' &nbsp; <b>Kelas:</b> '+g('kelas')+' &nbsp; <b>No. Absen:</b> '+g('absen')+'</p>'
+ +'<h3>Tabel Investigasi</h3><table><tr><th>No</th><th>Benda</th><th>Sifat Fisis</th><th>Sifat Kimia</th><th>Alat Ukur</th></tr>';
+ for(var n=1;n<=5;n++)h+='<tr><td>'+n+'</td><td>'+g('b'+n)+'</td><td>'+g('r'+n+'f')+'</td><td>'+g('r'+n+'k')+'</td><td>'+g('r'+n+'a')+'</td></tr>';
+ h+='</table><h3>Kartu Profil Zat: '+g('alias')+'</h3><p><b>Benda:</b> '+g('kb')+'</p>';
+ h+=S.drawn?'<img alt="Sketsa" src="'+cv.toDataURL('image/png')+'">':'<p>(Tidak ada sketsa)</p>';
+ h+='<table><tr><th>Sifat Fisis</th><th>Sifat Kimia</th><th>Alat Ukur</th></tr><tr><td>1. '+g('kf1')+'<br>2. '+g('kf2')+'</td><td>1. '+g('kk1')+'<br>2. '+g('kk2')+'</td><td>'+g('ka')+'</td></tr></table>'
+ +'<h3>Cerita ke Teman</h3><div class="t">'+g('cerita')+'</div>'
+ +'<h3>Laporan Pengerjaan</h3><p>Skor kelengkapan: '+stats().score+'% • Berpindah tab/aplikasi: '+S.tabs+' kali • Percobaan menempel: '+S.pastes+' kali • Cek Pemahaman: '+S.qsc+'/'+QZ.length+' ('+S.tries+' percobaan)</p>';
+ $('printDoc').innerHTML=h}
+function savePdf(){var old=document.title;
+ try{buildPrint();document.title=fname();
+  window.addEventListener('afterprint',function f(){document.title=old;window.removeEventListener('afterprint',f)});
+  setTimeout(function(){try{window.print()}catch(e){document.title=old;toast('Cetak tidak didukung di sini. Gunakan .txt.')}},80)}
+ catch(e){document.title=old;toast('Gagal menyiapkan PDF. Gunakan tombol .txt.')}}
+function saveTxt(){try{var b=new Blob(['\ufeff'+plain()],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');
+ a.href=URL.createObjectURL(b);a.download=fname()+'.txt';document.body.appendChild(a);a.click();
+ setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500);toast('File .txt diunduh. Jika tidak muncul, pakai “Salin teks”.')}
+ catch(e){toast('Unduh gagal. Coba tombol “Salin teks”.')}}
+function copyTxt(){try{navigator.clipboard.writeText(plain()).then(function(){toast('Teks jawaban disalin.')},function(){toast('Gagal menyalin. Gunakan .txt.')})}catch(e){toast('Gagal menyalin. Gunakan .txt.')}}
+
+show(Math.min(Math.max(+S.step||0,0),TOTAL-1));
+})();
+</script></body></html>
